@@ -10,14 +10,14 @@ void swap(int *a, int *b)
 
 int Partition(int *a, int l, int h)
 {
-    int pivot = a[l];
-    int i=l,j=h;
+    int pivot = a[h];
+    int i=l-1,j=h;
 
     while(i<j)
     {
         do{
             i++;
-        } while(a[i]<=pivot);
+        } while(a[i]<pivot);
 
         do
         {
@@ -30,19 +30,19 @@ int Partition(int *a, int l, int h)
         }     
     }
 
-    swap(&a[l],&a[j]);
+    swap(&a[h],&a[i]);
 
-    return j;
+    return i;
 }
 
 void QuickSort(int *a,int l,int h)
 {
-    int j;
+    int p;
     if(l<h)
     {
-        j = Partition(a,l,h);
-        QuickSort(a,l,j);
-        QuickSort(a,j+1,h);
+        p = Partition(a,l,h);
+        QuickSort(a,l,p-1);
+        QuickSort(a,p+1,h);
     }
 }
 
@@ -54,13 +54,12 @@ int main()
     printf("Enter elements: ");
     for(i=0;i<n;i++) scanf("%d",&a[i]);
 
-    QuickSort(a,0,n);
+    QuickSort(a,0,n-1);
 
     printf("After sorting :");
     for(i=0;i<n;i++) printf("%d ",a[i]);
 
     return 0;
 }
-
 
 
