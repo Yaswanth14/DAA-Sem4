@@ -1,81 +1,59 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-bool isSafe(int row, int col, vector<string> &board, int n)
+
+bool isSafe(vector<string>board, int row, int col, int n)
 {
-    // check upper diagonal
-    int duprow = row;
-    int dupcol = col;
-
-    while(row>=0&&col>=0)
+    for(int i=0;i<n; i++)
     {
-        if(board[row][col]=='Q') return false;
-        row--;
-        col--;
-    }
-
-    row = duprow;
-    col = dupcol;
-
-    // check left
-    while(col>=0)
-    {
-        if(board[row][col]=='Q') return false;
-        col--;
-    }
-
-    row = duprow;
-    col = dupcol;
-
-    while(row>=0&&col>=0)
-    {
-        if(board[row][col]=='Q') return false;
-        row++;
-        col--;
+        // Check same column
+        if(board[i][col] == 'Q') return false;
+        // Check diagonals
+        if(row-i>=0 && col-i>=0 &&board[row-i][col-i]=='Q') return false;
+        if(row-i>=0 && col+i>=0 && board[row-i][col+i]=='Q') return false;
     }
     return true;
 }
 
-void solve(int col, vector<string> &board, vector<vector<string>> &ans, int n)
+void solve(vector<string>&board, int row, vector< vector <string> >&sols, int n)
 {
-    if(col==n)
+    if(row==(board[0].size()))
     {
-        ans.push_back(board);
-        for(auto it: board) cout<<it<<" ";
-        cout<<"\n";
+        sols.push_back(board);
         return;
     }
 
-    for(int row=0; row<n; row++)
+    for(int col=0; col<(board[0].size()); col++)
     {
-        if(isSafe(row, col, board, n))
+        if(isSafe(board, row, col, n))
         {
             board[row][col] = 'Q';
-            solve(col+1, board, ans, n);
-            board[row][col] = ',';
+            solve(board, row+1, sols, n);
+            board[row][col] = '.';
         }
     }
 }
 
-vector<vector<string>> solveQueens(int n)
+vector<vector<string>> solveNQueens(int n)
 {
-    vector<vector<string>>ans;
-    vector<string> board(n);
+    vector<vector<string>>sols;
+    vector<string> board(n, string(n, '.'));
+    solve(board, 0, sols, n);
 
-    string s(n, ',');
-    for(int i=0; i<n; i++) board[i] = s;
-
-    solve(0, board, ans, n);
-
-    return ans;
+    return sols;
 }
 
 int main()
 {
-    int n = 4;
-    solveQueens(n);
-
-    return 0;
+    int n;
+    cout<<"Enter size of board: ";
+    cin>>n;
+    vector<vector<string>>sols = solveNQueens(n);
+     for(int i=0; i<sols.size(); i++)
+     {
+         cout<<"Solution "<<i+1<<":\n";
+         for(int j = 0; j<sols[0].size(); j++) cout<<sols[i][j]<<"\n";
+        cout<<"\n\n";
+     }
 }
-
 
